@@ -87,3 +87,7 @@ public class McqController {
 }
 
 ```
+
+
+Create a Kafka Listener that will delete all the generated test if it was not submitted after some time
+  - or maybe a batch/cron job? since if we use Kafka, it probably will implement using a timer, which blocks the execution

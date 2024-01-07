@@ -11,6 +11,7 @@ import dev.agasen.quizzie.mcq.api.Mcq;
 import dev.agasen.quizzie.mcq.api.McqChoice;
 import dev.agasen.quizzie.mcq.api.McqService;
 import dev.agasen.quizzie.mcq.api.McqTest;
+import dev.agasen.quizzie.mcq.api.McqTestItem;
 import dev.agasen.quizzie.mcq.persistence.McqChoiceEntity;
 import dev.agasen.quizzie.mcq.persistence.McqEntity;
 import dev.agasen.quizzie.mcq.persistence.McqRepository;
@@ -121,6 +122,24 @@ public class McqServiceImpl implements McqService {
   public McqTest getTestResult(Long id) {
     McqTestEntity testResult = mcqTestRepository.findById(id).orElseThrow();
     return mcqTestMapper.toMcqTest(testResult);
+  }
+
+
+  @Override
+  @Transactional
+  public McqTest submitTest(Long id, List<McqTestItem> testItems) {
+    // add validation if test is already submitted here
+    McqTestEntity unansweredTest = mcqTestRepository.findById(id).orElseThrow();
+    
+    McqTestEntity answeredTest = unansweredTest.submitAnswers(
+      testItems.stream()
+        .map(i -> new McqTestEntity.ItemAnswer(i.id(), i.selectedChoiceId()))
+        .toList()
+    );
+
+    McqTestEntity savedTest = mcqTestRepository.save(answeredTest);
+
+    return mcqTestMapper.toMcqTest(savedTest);
   }
 
 }

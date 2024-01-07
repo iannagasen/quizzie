@@ -24,7 +24,7 @@ public class McqTestMapper {
     return new McqTestItem(
       e.getId(), 
       e.getQuestion() != null ? mcqMapper.toMcq(e.getQuestion()) : null, 
-      e.getSelectedChoice() != null ? mcqMapper.toMcqChoice(e.getSelectedChoice()) : null
+      e.getSelectedChoice() != null ? e.getSelectedChoice().getId() : null
     );
   }
 

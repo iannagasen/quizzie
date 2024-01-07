@@ -64,5 +64,4 @@ public class McqEntity {
     return new McqChoiceEntityUpdater(this.choices);
   }
 
-
 }

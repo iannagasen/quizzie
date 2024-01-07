@@ -16,28 +16,38 @@ public interface McqService {
    * GET /questions/{topic}
    */
   @GetMapping("/questions/{topic}")
-  List<Mcq> getQuestions(@PathVariable(name="topic") String topic);
+  List<Mcq> getQuestions(
+      @PathVariable(name="topic") String topic
+  );
 
   /**
    * POST /question
    * Payload: Mcq
    */
   @PostMapping("/question")
-  Mcq addMcq(@RequestBody Mcq mcq);
+  Mcq addMcq(
+      @RequestBody Mcq mcq
+  );
 
   /**
    * POST /question/{id}/choice
    * Payload: McqChoice
    */
   @PostMapping("/question/{id}/choice")
-  McqChoice addChoice(@PathVariable(name="id") Long id, @RequestBody McqChoice choice);
+  McqChoice addChoice(
+      @PathVariable(name="id") Long id, 
+      @RequestBody McqChoice choice
+  );
 
   /**
    * PATCH /question/{id}/choice
    * Payload: McqChoice
    */
   @PatchMapping("/question/{id}/choice")
-  void updateChoice(@PathVariable(name="id") Long id, @RequestBody McqChoice choice);
+  void updateChoice(
+      @PathVariable(name="id") Long id, 
+      @RequestBody McqChoice choice
+  );
 
   /**
    * POST /test
@@ -45,15 +55,26 @@ public interface McqService {
    */
   @PostMapping("/test")
   McqTest generateTest(
-    @RequestParam(name="topic") Optional<String> topic,
-    @RequestParam(name="items") Optional<Integer> items
+      @RequestParam(name="topic") Optional<String> topic,
+      @RequestParam(name="items") Optional<Integer> items
   );
-
 
   /**
    *  GET /test/{id}
    */
   @GetMapping("/test/{id}")
-  McqTest getTestResult(@PathVariable(name="id") Long id);
+  McqTest getTestResult(
+      @PathVariable(name="id") Long id
+  );
+
+  /**
+   * POST /test/{id}
+   * Payload: List<McqTestItem>
+   */
+  @PostMapping("/test/{id}")
+  McqTest submitTest(
+      @PathVariable(name="id") Long id,
+      @RequestBody List<McqTestItem> testItems
+  );
 
 }

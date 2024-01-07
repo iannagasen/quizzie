@@ -12,7 +12,4 @@ public interface McqChoiceRepository extends JpaRepository<McqChoiceEntity, Long
     SELECT * FROM mcq_choice WHERE mcq_id = :mcqId
   """)
   List<McqChoiceEntity> findAllByMcq(@Param("mcqId") Long mcqId);
-
-  
-
 }

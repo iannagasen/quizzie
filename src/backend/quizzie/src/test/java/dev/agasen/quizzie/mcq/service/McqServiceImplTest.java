@@ -2,6 +2,7 @@ package dev.agasen.quizzie.mcq.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -17,10 +18,13 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import dev.agasen.quizzie.MysqlTestBase;
 import dev.agasen.quizzie.mcq.api.Mcq;
 import dev.agasen.quizzie.mcq.api.McqChoice;
+import dev.agasen.quizzie.mcq.api.McqTest;
 import dev.agasen.quizzie.mcq.persistence.McqChoiceEntity;
 import dev.agasen.quizzie.mcq.persistence.McqChoiceRepository;
 import dev.agasen.quizzie.mcq.persistence.McqEntity;
 import dev.agasen.quizzie.mcq.persistence.McqRepository;
+import dev.agasen.quizzie.mcq.persistence.McqTestEntity;
+import dev.agasen.quizzie.mcq.persistence.McqTestRepository;
 
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT, properties={
   "spring.jpa.hibernate.ddl-auto=update"
@@ -30,10 +34,12 @@ class McqServiceImplTest extends MysqlTestBase {
   @Autowired private WebTestClient webClient;
   @Autowired private McqRepository mcqRepository;
   @Autowired private McqChoiceRepository mcqChoiceRepository;
+  @Autowired private McqTestRepository mcqTestRepository;
 
   @BeforeEach
   void setupDb() {
     mcqRepository.deleteAll();
+    mcqTestRepository.deleteAll();
   }
 
   @Test
@@ -151,7 +157,38 @@ class McqServiceImplTest extends MysqlTestBase {
     assertEquals(newVersionAfterUpdated, version);
   }
 
+  @Test
+  void testGenerateTest() {
+    String ENDPOINT_FORMAT = "/mcq/test?topic=%s&items=%d";
+    String topic = "AWS";
+    int items = 4;
 
+    // create 4 questions
+    createMcqQuestion(topic, 1);
+    createMcqQuestion(topic, 2);
+    createMcqQuestion(topic, 3);
+    createMcqQuestion(topic, 4);
+
+    webClient.post()
+        .uri(ENDPOINT_FORMAT.formatted(topic, items))
+        .exchange()
+        .expectStatus().is2xxSuccessful()
+        .expectBody()
+        .jsonPath("$.mcqs.length()").isEqualTo(4)
+        .jsonPath("$.id").isNotEmpty();
+
+    assertEquals(1, mcqTestRepository.findAll().size());
+  }
+
+  @Test
+  void testGetTestResult() {
+    
+  }
+
+  @Test
+  void testSubmitTest() {
+    
+  }
   
   private McqEntity createMcqQuestion(String topic, int randomId) {
     McqEntity mcq = new McqEntity(topic, "question no. " + randomId);
@@ -160,6 +197,19 @@ class McqServiceImplTest extends MysqlTestBase {
     mcq.addChoice(new McqChoiceEntity("value 3", "explanation 3", false));
     mcq.addChoice(new McqChoiceEntity("value 4", "explanation 4", false));
     return mcqRepository.save(mcq);
+  }
+
+  private McqTestEntity generateUnansweredTest(String topic, int noOfItems) {
+    List<McqEntity> mcqs = new ArrayList<>();
+    for(int i = 0; i < noOfItems ; i++) {
+      var mcq = createMcqQuestion(topic, i);
+      mcqs.add(mcq);
+    }
+
+    McqTestEntity generatedTest = McqTestEntity.newTest();
+    generatedTest.addMcqItems(mcqs);
+
+    return mcqTestRepository.save(generatedTest);
   }
 
 

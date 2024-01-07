@@ -49,4 +49,16 @@ public class McqTestItemEntity {
     return new McqTestItemEntity(question);
   }
 
+  protected McqTestItemEntity selectAnswer(Long choiceId) {
+    this.selectedChoice = question.findChoiceById(choiceId).orElse(null);
+    return this;
+  }
+
+  protected boolean isSelectedAnswerCorrect() {
+    return selectedChoice != null ? selectedChoice.isCorrect() : false;
+  }
+
+  protected void setMcqTest(McqTestEntity mcqTest) {
+    this.mcqTest = mcqTest;
+  }
 }
