@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-QuizzieApplication<quizzie>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "dev.agasen.quizzie.QuizzieApplication",
+      "projectName": "quizzie",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
