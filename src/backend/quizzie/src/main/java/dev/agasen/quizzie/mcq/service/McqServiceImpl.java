@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/mcq")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class McqServiceImpl implements McqService {
 
   private final McqRepository mcqRepository;

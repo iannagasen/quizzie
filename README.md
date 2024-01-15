@@ -63,7 +63,7 @@ API
 public class McqController {
 
   // add Query Params here, topic? no of items? timer?
-  @GetMapping("/test")
+  @PostMapping("/test")
   McqTest generateTest();
 
   @PostMapping("/test")
