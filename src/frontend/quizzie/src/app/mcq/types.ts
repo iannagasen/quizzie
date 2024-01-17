@@ -6,8 +6,17 @@ export interface McqChoice {
 }
 
 export interface Mcq {
-  id: number;
+  id?: number;
   topic: string;
   question: string;
   choices: McqChoice[];
+}
+
+export interface UpdateMcqDTO {
+  mcq: Mcq
+}
+
+export interface AddChoiceDTO {
+  addedChoice: McqChoice,
+  mcqId: number
 }

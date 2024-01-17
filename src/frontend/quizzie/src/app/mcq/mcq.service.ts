@@ -1,28 +1,27 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Mcq } from './types';
+import { Mcq, McqChoice } from './types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class McqService {
 
-  
+  baseUrl = "http://localhost:8080/mcq";
+
   constructor(
     private _http: HttpClient
-    ) { }
+  ) { }
     
-    // generate a quiz
+  // generate a quiz
   generateTest(topic: string) {
-    const baseUrl = "localhost:8080/mcq";
-    const endpoint = `${baseUrl}/test`;
+    const endpoint = `${this.baseUrl}/test`;
     const test = this._http.post(endpoint, {});
   }
 
   getQuestions(topic: string): Observable<Mcq[]> {
-    const baseUrl = "http://localhost:8080/mcq";
-    const endpoint = `${baseUrl}/questions/${topic}`;
+    const endpoint = `${this.baseUrl}/questions/${topic}`;
     var headers = new HttpHeaders({ 
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -32,6 +31,12 @@ export class McqService {
     });
     const questions = this._http.get<Mcq[]>(endpoint, { headers: headers });
     return questions;
+  }
+  
+  addChoice(mcqId: number, requestBody: McqChoice): Observable<McqChoice> {
+    const endpoint = `${this.baseUrl}/question/${mcqId}/choice`;
+    const response = this._http.post<McqChoice>(endpoint, requestBody);
+    return response;
   }
 
 }
